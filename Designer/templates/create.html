@@ -1,0 +1,1876 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{project.projectname}}</title>
+    <link rel = "stylesheet" href = "{% static 'filemanager/css/filecss.css' %}" >
+    <link rel = "icon" href = "{% static 'ncode/icon.png' %}">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+
+<style>
+    
+        
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(0, 0, 0, 0.5);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            z-index: 1499;
+
+        }
+
+        
+        .dialog-box {
+            background: rgb(26, 26, 26);
+            padding: 20px;
+            border-radius: 10px;
+            width: 500px;
+            text-align: center;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.3);
+            z-index: 1199;
+        }
+
+       
+        .close-btn {
+            background: rgb(216, 56, 56);
+            color: white;
+            width: 150px;
+            border: none;
+            padding: 10px;
+            cursor: pointer;
+            border-radius: 5px;
+            margin: 15px;
+        }
+
+        .close-btn:hover {
+            background: rgb(134, 31, 31);
+        }
+        .create-btn {
+            background: rgb(86, 182, 102);
+            color: white;
+            width: 150px;
+            border: none;
+            padding: 10px;
+            cursor: pointer;
+            border-radius: 5px;
+            margin: 15px;
+        }
+
+        .create-btn:hover {
+            background: rgb(51, 107, 53);
+        }
+  
+        .logout-btn {
+            background: rgb(59, 155, 184);
+            color: white;
+            width: 150px;
+            border: none;
+            padding: 10px;
+            cursor: pointer;
+            border-radius: 5px;
+            margin: 15px;
+        }
+
+        .logout-btn:hover {
+            background: rgb(44, 90, 121);
+        }
+        .color-selector-container {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            justify-content: center;
+            margin-top: 20px;
+        }
+        .color-selector-dropdown, 
+        .color-selector-input {
+            padding: 8px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            margin-top: 12px;
+           
+        }
+        .color-selector-preview {
+            width: 30px;
+            margin-top: 22px;
+            height: 30px;
+            border-radius: 50%;
+            border: 1px solid #999;
+        }
+        .custom-input-select {
+    display: flex;
+    align-items: center;
+    border: 1px solid rgb(177, 177, 177);
+    border-radius: 5px;
+    overflow: hidden;
+    width: 100px; 
+    margin-top: 9px;
+}
+
+.custom-text-input {
+    width:30px;
+    flex: 1;
+    padding: 5px;
+    border: none;
+    background: transparent;
+    color: white;
+    height: 30px;
+}
+
+.custom-select {
+    border-top: none;
+    border-left: none;
+    border-right: none;
+    background: transparent;
+    color: white;
+    height: 30px;
+    padding-left: 5px;
+    padding-bottom:2px;
+    cursor: pointer;
+    margin-top: 0px !important;
+}
+
+.custom-text-input:focus, .custom-select:focus {
+    outline: none;
+}
+.work-area{
+   
+   
+
+   margin-left:5vw;
+   
+   width: 95vw;
+   height: 100vh;
+}
+.style-box, .edit-box, .Animation-box{
+    display: none;
+    height:700px;
+    width:400px;
+    z-index:999;
+    position: absolute;
+    background-color: rgb(53, 53, 53);
+    border-radius: 5px;
+    top: 8%; 
+    left: 37%;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+}
+#work-areas {
+  width: 100%;
+  height: 95vh;
+  margin-top: 5vh;
+  background-color: white;
+  position: relative;
+  z-index: 1;
+  overflow: hidden; 
+}
+.move-div{
+    width:100%;
+    background-color: rgb(39, 39, 39);
+    margin:0;
+    height:20px;
+    border-radius: 5px 5px 0px 0px;
+    z-index:1000;
+    cursor: grab; 
+    
+    
+}
+.move-div:active {
+    cursor: grabbing;
+}
+.style-close, .edit-close, .Animation-close{
+    width:16px;
+    height:16px;
+    text-align: center;
+    align-items: center;
+    border-radius: 5px;
+    color: #c9c9c9;
+    background-color: rgba(255, 235, 205, 0);
+    margin-top: 15px;
+    margin-left: 381px;
+    position: absolute;
+    top:-13px;
+    cursor: pointer;
+}
+
+
+.style-close:hover{
+    background-color: rgb(82, 82, 82);
+    color:rgb(22, 22, 22);
+}
+.inserticon{
+    color:antiquewhite;
+    position: relative;
+    
+}
+.tabs{
+    margin-top: 20px;
+    margin-left: 20px;
+    height:20px;
+    width:360px;
+    
+    display:flex;
+
+}
+.tab{
+    height:100%;
+    width:60px;
+    background-color: rgb(61, 61, 61);
+    color:black;
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+    text-align: center;
+}
+.tab.active{
+    background-color: rgb(99, 99, 99);
+    border-bottom: 2px solid white;
+}
+.tab:hover {
+  background-color: rgb(116, 116, 116);
+}
+
+
+.data-display{
+    width:360px;
+    height:250px;
+    overflow-y:scroll;
+    border: 4px solid rgb(99, 99, 99);
+    margin-left: 20px;
+    border-bottom-left-radius: 5px;
+    border-bottom-right-radius: 5px;
+}
+th{
+    text-align: center;
+    background-color: #3d3d3d;
+    color: #ffffff;
+    font-size: small;
+    font-weight: 100;
+    border-right: #383838;
+}
+tr{
+    border-bottom: 1px solid rgb(34, 34, 34);
+    color: #ffffff;
+    font-size: small;
+    font-weight: 100;
+    border-right: 1px solid rgb(15, 15, 15);
+}
+td{
+    border-right: #383838;
+}
+.style-add{
+    margin-left: 40px;
+    height:47%;
+    border-radius:15px;
+    width:62%;
+    margin-top: 20px;
+    border:none;
+    background-color: #1b88bb;
+    color:#ffffff;
+    transition: background-color 0.3s ease-out;
+}
+.style-add:hover{
+    background-color:#0f638a;
+
+}
+.style-add:active{
+    background-color:#053e58;
+
+}
+
+</style>
+
+
+</head>
+
+<body class = "bodycl">
+    
+        <div class = "bgcol">
+            <div class = "menu-vis"  style = "z-index:inherit">
+                <div class = "semicircle">
+                <div class = "share" style = "left: 200px; top: 70px;  " onclick="window.location.href='{% url 'projects' %}'">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bik bi-play-btn" viewBox="0 0 16 16">
+                        <path d="M6.79 5.093A.5.5 0 0 0 6 5.5v5a.5.5 0 0 0 .79.407l3.5-2.5a.5.5 0 0 0 0-.814z"/>
+                        <path d="M0 4a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2zm15 0a1 1 0 0 0-1-1H2a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1z"/>
+                      </svg>
+                       <p class = "menu-l">Preview</p>
+                </div>
+                <div class = "share" style = "left: 115px; top: 115px; " onclick = "fetch('/api/regenerate-code/')">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bik bi-clipboard" viewBox="0 0 16 16">
+                        <path d="M4 1.5H3a2 2 0 0 0-2 2V14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V3.5a2 2 0 0 0-2-2h-1v1h1a1 1 0 0 1 1 1V14a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V3.5a1 1 0 0 1 1-1h1z"/>
+                        <path d="M9.5 1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-3a.5.5 0 0 1-.5-.5v-1a.5.5 0 0 1 .5-.5zm-3-1A1.5 1.5 0 0 0 5 1.5v1A1.5 1.5 0 0 0 6.5 4h3A1.5 1.5 0 0 0 11 2.5v-1A1.5 1.5 0 0 0 9.5 0z"/>
+                      </svg><p class = "menu-l">Copy</p>
+                </div>
+                <div class = "share" style = "left: 70px; top: 200px; ">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bik bi-box-arrow-in-down" viewBox="0 0 16 16">
+                        <path fill-rule="evenodd" d="M3.5 6a.5.5 0 0 0-.5.5v8a.5.5 0 0 0 .5.5h9a.5.5 0 0 0 .5-.5v-8a.5.5 0 0 0-.5-.5h-2a.5.5 0 0 1 0-1h2A1.5 1.5 0 0 1 14 6.5v8a1.5 1.5 0 0 1-1.5 1.5h-9A1.5 1.5 0 0 1 2 14.5v-8A1.5 1.5 0 0 1 3.5 5h2a.5.5 0 0 1 0 1z"/>
+                        <path fill-rule="evenodd" d="M7.646 11.854a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293V1.5a.5.5 0 0 0-1 0v8.793L5.354 8.146a.5.5 0 1 0-.708.708z"/>
+                    </svg>
+                    <p class = "menu-l">Import</p>
+                </div>
+                <a href="{% url 'codepage' %}">
+                    <div class="share" style="left: 195px; top: 195px;">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bik bi-braces" viewBox="0 0 16 16">
+                            <path d="M2.114 8.063V7.9c1.005-.102 1.497-.615 1.497-1.6V4.503c0-1.094.39-1.538 1.354-1.538h.273V2h-.376C3.25 2 2.49 2.759 2.49 4.352v1.524c0 1.094-.376 1.456-1.49 1.456v1.299c1.114 0 1.49.362 1.49 1.456v1.524c0 1.593.759 2.352 2.372 2.352h.376v-.964h-.273c-.964 0-1.354-.444-1.354-1.538V9.663c0-.984-.492-1.497-1.497-1.6M13.886 7.9v.163c-1.005.103-1.497.616-1.497 1.6v1.798c0 1.094-.39 1.538-1.354 1.538h-.273v.964h.376c1.613 0 2.372-.759 2.372-2.352v-1.524c0-1.094.376-1.456 1.49-1.456V7.332c-1.114 0-1.49-.362-1.49-1.456V4.352C13.51 2.759 12.75 2 11.138 2h-.376v.964h.273c.964 0 1.354.444 1.354 1.538V6.3c0 .984.492 1.497 1.497 1.6"/>
+                        </svg>
+                        <p class="menu-l">Code</p>
+                    </div>
+                </a>
+            </div>
+            </div>
+                <nav class = "navbar-left" style = "z-index:899">
+                    <div class = "navbar-div-left">
+                        <div class = "tools" style = "margin-top: 100px;" onclick="toggleDiv('movingDiv1')">
+                            <div class = "tools-icon">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bir bi-file-plus" viewBox="0 0 16 16">
+                                        <path d="M8.5 6a.5.5 0 0 0-1 0v1.5H6a.5.5 0 0 0 0 1h1.5V10a.5.5 0 0 0 1 0V8.5H10a.5.5 0 0 0 0-1H8.5z"/>
+                                        <path d="M2 2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2zm10-1H4a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1"/>
+                                    </svg>
+                            </div>
+                        <p class = "tools-name">Insert</p>
+                    </div>
+                    <div class = "tools" onclick="openStyleBox()"  id = "tools">
+                        <div class = "tools-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bir bi-building-add" viewBox="0 0 16 16">
+                            <path d="M12.5 16a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7m.5-5v1h1a.5.5 0 0 1 0 1h-1v1a.5.5 0 0 1-1 0v-1h-1a.5.5 0 0 1 0-1h1v-1a.5.5 0 0 1 1 0"/>
+                            <path d="M2 1a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v6.5a.5.5 0 0 1-1 0V1H3v14h3v-2.5a.5.5 0 0 1 .5-.5H8v4H3a1 1 0 0 1-1-1z"/>
+                            <path d="M4.5 2a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5zm3 0a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5zm3 0a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5zm-6 3a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5zm3 0a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5zm3 0a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5zm-6 3a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5zm3 0a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5z"/>
+                        </svg>
+                        </div>
+                        <p class = "tools-name">Styles</p>
+                    </div>
+                    <div class = "tools" onclick="openEditBox()">
+                        <div class = "tools-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bir bi-pencil-square" viewBox="0 0 16 16">
+                                <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
+                                <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z"/>
+                              </svg>
+                        </div>
+                        <p class = "tools-name">Edit Code</p>
+                    </div>
+                          <div class = "tools" onclick="openAnimationBox()">
+                        <div class = "tools-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bir // Call this function from another page when style is added bi-person-walking" viewBox="0 0 16 16">
+  <path d="M9.5 1.5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0M6.44 3.752A.75.75 0 0 1 7 3.5h1.445c.742 0 1.32.643 1.243 1.38l-.43 4.083a1.8 1.8 0 0 1-.088.395l-.318.906.213.242a.8.8 0 0 1 .114.175l2 4.25a.75.75 0 1 1-1.357.638l-1.956-4.154-1.68-1.921A.75.75 0 0 1 6 8.96l.138-2.613-.435.489-.464 2.786a.75.75 0 1 1-1.48-.246l.5-3a.75.75 0 0 1 .18-.375l2-2.25Z"/>
+  <path d="M6.25 11.745v-1.418l1.204 1.375.261.524a.8.8 0 0 1-.12.231l-2.5 3.25a.75.75 0 1 1-1.19-.914zm4.22-4.215-.494-.494.205-1.843.006-.067 1.124 1.124h1.44a.75.75 0 0 1 0 1.5H11a.75.75 0 0 1-.531-.22Z"/>
+</svg>
+                        </div>
+                        <p class = "tools-name">Animation</p>
+                    </div>
+
+                </div>
+
+            </nav>
+      
+            <nav class = "navbar-top" style = "z-index:999">
+                <div class = "navbar-div-top">
+                    <div class = "logo">
+                        <img class = "logo-p" src = "{% static 'filemanager\logo\NCODE.png' %}">
+                    </div>
+                    <div class = "buttoncase">
+                        <div class = "savebutton">
+                            <div style = "margin-top: 4px;">
+                                <button type="button" class="btn btn-primary rounded-pill button-color" onclick="window.location.href='{% url 'saveandexit' %}'">
+
+                                    Save & Exit
+                                </button>
+                                </div>
+                        </div>
+
+                        <div class = "savebutton">
+                            <div style = "margin-top: 4px;">
+                                <button type="button" class="btn btn-primary dropdown-toggle rounded-pill button-color" data-bs-toggle="dropdown" aria-expanded="false">Export&nbsp;&nbsp;&nbsp;</button>
+                                <ul class="dropdown-menu">
+                                    <li><a class="dropdown-item" href="#"> HTML</a></li>
+                                    <li><a class="dropdown-item" href="#"> CSS</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class = "menu">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bis bi-three-dots-vertical" viewBox="0 0 16 16">
+                                <path d="M9.5 13a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0m0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0m0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0"/>
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+            </nav>
+        <div style = "z-index: 5;">
+            <div class = "prob">
+                <div class = "tool-visib" style = "z-index:inherit">
+                    <div class="tooloptions" id="movingDiv1" style="z-index:9">
+                        <div class="toollist" onclick="openDialog('dialogOverlay3')">
+                            <i class="bi bi-fonts inserticon"></i>
+                            <p style = "color:rgb(212, 213, 214);font-size: small;">Text</p>
+                        </div>
+                        <div class="toollist" onclick="openDialog('dialogOverlay2')">
+                            <i class="bi bi-image inserticon"></i>
+                            <p style = "color:rgb(212, 213, 214);font-size: small;">Image</p>
+                        </div>
+                        <div class="toollist" onclick="openDialog('dialogOverlay1')">
+                            <i class="bi bi-layout-three-columns inserticon"></i>
+                            <p style = "color:rgb(212, 213, 214);font-size: small;">Division</p>
+                        </div>
+                        <div class="toollist" onclick="openDialog('dialogOverlay4')">
+                            <i class="bi bi-card-text inserticon"></i>
+                            <p style = "color:rgb(212, 213, 214);font-size: small;">Input</p>
+                        </div>
+                        <div class="toollist" onclick="openDialog('dialogOverlay5')">
+                            <i class="bi bi-menu-button-fill inserticon"></i>
+                            <p style = "color:rgb(212, 213, 214);font-size: small;">Button</p>
+                        </div>
+                        <div class="toollist" onclick="openDialog('dialogOverlay6')">
+                            <i class="bi bi-segmented-nav inserticon"></i>
+                            <p style = "color:rgb(212, 213, 214);font-size: small;">NavBar</p>
+                        </div>
+                    </div>
+                    <div class = "tooloptions2" id="movingDiv2">
+                        <div class = "toollist">
+                            <p></p>
+                        </div>
+                        <div class = "toollist">
+                            <p></p>
+                        </div>
+                        <div class = "toollist">
+                            <p></p>
+                        </div>
+                    </div>
+                </div>
+            </div>  
+        </div>       
+            <div class = "work-area">
+                <div id = "work-areas">
+                    <div class="style-box" id="style-box">
+                        <div class="move-div">
+                          <div class="style-close">
+                            <p style="margin-top:-6px;margin-left: -1px;">x</p>
+                          </div>
+                          
+                        </div>
+                        <div class = "tab-component" data-prefix="one">
+                        <div class="tabs">
+                            <div class="tab" data-index="0" data-target="div-display"><p style="color: rgb(211, 211, 211);font-size: small;">div</p></div>
+                            <div class="tab" data-index="1" data-target="input-display"><p style="color: rgb(211, 211, 211);font-size: small;">input</p></div>
+                            <div class="tab" data-index="2" data-target="text-display"><p style="color: rgb(211, 211, 211);font-size: small;">text</p></div>
+                            <div class="tab" data-index="3" data-target="images-display"><p style="color: rgb(211, 211, 211);font-size: small;">images</p></div>
+                            <div class="tab" data-index="4" data-target="button-display"><p style="color: rgb(211, 211, 211);font-size: small;">button</p></div>
+                            <div class="tab" data-index="5" data-target="navbar-display"><p style="color: rgb(211, 211, 211);font-size: small;">navbar</p></div>
+                        </div>
+                          
+                            
+                          
+                        <div  class="data-display" id="one-div-display" style="display: block;">
+                            <table style="width: 100%; border-collapse: collapse; font-family: Arial, sans-serif; font-size: 14px;">
+                                <thead style="background-color: #777777; color: rgb(235, 235, 235);">
+                                  <tr>
+                                    <th style="padding-left: 10px; width: 70%; height: 20px; text-align: left; border-right: 1px solid #292828;">Div Names</th>
+                                  
+                                  </tr>
+                                </thead>
+                                <tbody>
+                                  {% for i in divnames %}
+                                  <tr style="border-bottom: 1px solid #383838; background-color: rgb(59, 59, 59); align-items: center;">
+                                   
+                                    <td onclick="loadStyles('{{ i.divname }}')" style="cursor: pointer; padding-left: 10px; height: 30px; border-right: 1px solid #292828; color: #d6d6d6;">
+                                      {{ i.divname }}
+                                    </td>
+                                    
+                                    
+                                  </tr>
+                                  {% endfor %}
+                                </tbody>
+                              </table>
+                              
+                        </div>
+                        <div class="data-display" id = "one-input-display" style="display: none;">
+                            <table style="width: 100%; border-collapse: collapse; font-family: Arial, sans-serif; font-size: 14px;">
+                                <thead style="background-color: #777777; color: rgb(235, 235, 235);">
+                                  <tr>
+                                    <th style="padding-left: 10px; width: 70%; height: 20px; text-align: left; border-right: 1px solid #292828;">Input Names</th>
+                                   
+                                  </tr>
+                                </thead>
+                                <tbody>
+                                  {% for i in inputnames %}
+                                  <tr style="border-bottom: 1px solid #383838; background-color: rgb(59, 59, 59);align-items: center;">
+                                    <td onclick="loadStyles('{{ i.inputname }}')"  style="padding-left: 10px; height: 30px; border-right: 1px solid #292828;color: #d6d6d6;">{{ i.inputname }}</td>
+                                    
+                                  </tr>
+                                  {% endfor %}
+                                </tbody>
+                              </table>
+                        </div>
+                        <div class="data-display" id = "one-text-display" style="display: none;">
+                            <table style="width: 100%; border-collapse: collapse; font-family: Arial, sans-serif; font-size: 14px;">
+                                <thead style="background-color: #777777; color: rgb(235, 235, 235);">
+                                  <tr>
+                                    <th style="padding-left: 10px; width: 70%; height: 20px; text-align: left; border-right: 1px solid #292828;">Text Names</th>
+                                   
+                                  </tr>
+                                </thead>
+                                <tbody>
+                                  {% for i in textnames %}
+                                  <tr style="border-bottom: 1px solid #383838; background-color: rgb(59, 59, 59);align-items: center;">
+                                    <td onclick="loadStyles('{{ i.textname }}')"  style="padding-left: 10px; height: 30px; border-right: 1px solid #292828;color: #d6d6d6;">{{ i.textname }}</td>
+                                    
+                                  </tr>
+                                  {% endfor %}
+                                </tbody>
+                              </table>
+                        </div>
+                        <div class="data-display" id = "one-images-display" style="display: none;">
+                            <table style="width: 100%; border-collapse: collapse; font-family: Arial, sans-serif; font-size: 14px;">
+                                <thead style="background-color: #777777; color: rgb(235, 235, 235);">
+                                  <tr>
+                                    <th style="padding-left: 10px; width: 70%; height: 20px; text-align: left; border-right: 1px solid #292828;">Image Names</th>
+                                   
+                                  </tr>
+                                </thead>
+                                <tbody>
+                                  {% for i in imagenames %}
+                                  <tr style="border-bottom: 1px solid #383838; background-color: rgb(59, 59, 59);align-items: center;">
+                                    <td onclick="loadStyles('{{ i.imagename }}')"  style="padding-left: 10px; height: 30px; border-right: 1px solid #292828;color: #d6d6d6;">{{ i.imagename }}</td>
+                                    
+                                  </tr>
+                                  {% endfor %}
+                                </tbody>
+                              </table>
+
+                        </div>
+                        <div class="data-display" id = "one-button-display" style="display: none;">
+                            <table style="width: 100%; border-collapse: collapse; font-family: Arial, sans-serif; font-size: 14px;">
+                                <thead style="background-color: #777777; color: rgb(235, 235, 235);">
+                                  <tr>
+                                    <th style="padding-left: 10px; width: 70%; height: 20px; text-align: left; border-right: 1px solid #292828;">Image Names</th>
+                                   
+                                  </tr>
+                                </thead>
+                                <tbody>
+                                  {% for i in imagenames %}
+                                  <tr style="border-bottom: 1px solid #383838; background-color: rgb(59, 59, 59);align-items: center;">
+                                    <td style="padding-left: 10px; height: 30px; border-right: 1px solid #292828;color: #d6d6d6;">{{ i.imagename }}</td>
+                                   
+                                  </tr>
+                                  {% endfor %}
+                                </tbody>
+                              </table>
+                        </div>
+                        <div class="data-display" id = "one-navbar-display" style="display: none;">
+                                <table style="width: 100%; border-collapse: collapse; font-family: Arial, sans-serif; font-size: 14px;">
+                                    <thead style="background-color: #777777; color: rgb(235, 235, 235);">
+                                    <tr>
+                                        <th style="padding-left: 10px; width: 70%; height: 20px; text-align: left; border-right: 1px solid #292828;">Div Names</th>
+                                        
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    {% for i in divnames %}
+                                    <tr style="border-bottom: 1px solid #383838; background-color: rgb(59, 59, 59);align-items: center;">
+                                        <td style="padding-left: 10px; height: 30px; border-right: 1px solid #292828;color: #d6d6d6;">{{ i.divname }}</td>
+                                        
+                                    </tr>
+                                    {% endfor %}
+                                    </tbody>
+                                </table>
+                              </div>  
+                        </div>
+
+
+                         
+                    
+                      <div class="data-display" id="one-div-display" style="display: block; margin-top: 80px;">
+                        <table style="width: 100%; border-collapse: collapse; font-family: Arial, sans-serif; font-size: 14px;">
+                          <thead style="background-color: #777777; color: rgb(235, 235, 235);">
+                            <tr>
+                              <th style="padding-left: 10px; width: 45%; height: 20px; text-align: left; border-right: 1px solid #292828;">Attribute</th>
+                              <th style="padding-left: 10px; width: 45%; height: 20px; text-align: left; border-right: 1px solid #292828;">Value</th>
+                              <th style="padding-left: 10px; width: 10%; height: 20px; text-align: left; border-right: 1px solid #292828;">Delete</th>
+                             
+                            </tr>
+                          </thead>
+                          <tbody id="styles-tbody">
+                            
+                          </tbody>
+                        </table>
+                      </div>
+                      </div>
+                    
+                    <div class="edit-box" id="edit-box">
+                        <div class="move-div">
+                            <div class="edit-close">
+                                <p style="margin-top:-6px;margin-left: -1px;">x</p>
+                            </div>
+                        </div>
+                        <div class = "tab-component" data-prefix="two">
+                        <div class="tabs">
+                            <div class="tab" data-index="0" data-target="div-display"><p style="color: rgb(211, 211, 211);font-size: small;">div</p></div>
+                            <div class="tab" data-index="1" data-target="input-display"><p style="color: rgb(211, 211, 211);font-size: small;">input</p></div>
+                            <div class="tab" data-index="2" data-target="text-display"><p style="color: rgb(211, 211, 211);font-size: small;">text</p></div>
+                            <div class="tab" data-index="3" data-target="images-display"><p style="color: rgb(211, 211, 211);font-size: small;">images</p></div>
+                            <div class="tab" data-index="4" data-target="button-display"><p style="color: rgb(211, 211, 211);font-size: small;">button</p></div>
+                            <div class="tab" data-index="5" data-target="navbar-display"><p style="color: rgb(211, 211, 211);font-size: small;">navbar</p></div>
+                        </div>
+                          
+                        <div class="data-display" id = "two-div-display" style="display: block;">
+                            <table style="width: 100%; border-collapse: collapse; font-family: Arial, sans-serif; font-size: 14px;">
+                                <thead style="background-color: #777777; color: rgb(235, 235, 235);">
+                                  <tr>
+                                    <th style="padding-left: 10px; width: 70%; height: 20px; text-align: left; border-right: 1px solid #292828;">Div Names</th>
+                                    <th style="width: 15%; height: 20px; border-right: 1px solid #292828;">Edit</th>
+                                    <th style="width: 15%; height: 20px;">Delete</th>
+                                  </tr>
+                                </thead>
+                                <tbody>
+                                  {% for i in divnames %}
+                                  <tr style="border-bottom: 1px solid #383838; background-color: rgb(59, 59, 59);align-items: center;">
+                                    <td style="padding-left: 10px; height: 30px; border-right: 1px solid #292828;color: #d6d6d6;">{{ i.divname }}</td>
+                                    <td style="border-right: 1px solid #292828;" style = "padding-left: 10px;"><i class="bi bi-pencil-square" style = "padding-left: 20px;"></i></td>
+                                    <td><i class="bi bi-trash" style = "padding-left: 20px;"></i></td>
+                                  </tr>
+                                  {% endfor %}
+                                </tbody>
+                              </table>
+                              
+                        </div>
+                        <div class="data-display" id = "two-input-display" style="display: none;">
+                            <table style="width: 100%; border-collapse: collapse; font-family: Arial, sans-serif; font-size: 14px;">
+                                <thead style="background-color: #777777; color: rgb(235, 235, 235);">
+                                  <tr>
+                                    <th style="padding-left: 10px; width: 70%; height: 20px; text-align: left; border-right: 1px solid #292828;">Input Names</th>
+                                    <th style="width: 15%; height: 20px; border-right: 1px solid #292828;">Edit</th>
+                                    <th style="width: 15%; height: 20px;">Delete</th>
+                                  </tr>
+                                </thead>
+                                <tbody>
+                                  {% for i in inputnames %}
+                                  <tr style="border-bottom: 1px solid #383838; background-color: rgb(59, 59, 59);align-items: center;">
+                                    <td style="padding-left: 10px; height: 30px; border-right: 1px solid #292828;color: #d6d6d6;">{{ i.inputname }}</td>
+                                    <td style="border-right: 1px solid #292828;" style = "padding-left: 10px;"><i class="bi bi-pencil-square" style = "padding-left: 20px;"></i></td>
+                                    <td><i class="bi bi-trash" style = "padding-left: 20px;"></i></td>
+                                  </tr>
+                                  {% endfor %}
+                                </tbody>
+                              </table>
+                            </table>
+                        </div>
+                        <div class="data-display" id = "two-text-display" style="display: none;">
+                            <table style="width: 100%; border-collapse: collapse; font-family: Arial, sans-serif; font-size: 14px;">
+                                <thead style="background-color: #777777; color: rgb(235, 235, 235);">
+                                  <tr>
+                                    <th style="padding-left: 10px; width: 70%; height: 20px; text-align: left; border-right: 1px solid #292828;">Text Names</th>
+                                    <th style="width: 15%; height: 20px; border-right: 1px solid #292828;">Edit</th>
+                                    <th style="width: 15%; height: 20px;">Delete</th>
+                                  </tr>
+                                </thead>
+                                <tbody>
+                                  {% for i in textnames %}
+                                  <tr style="border-bottom: 1px solid #383838; background-color: rgb(59, 59, 59);align-items: center;">
+                                    <td style="padding-left: 10px; height: 30px; border-right: 1px solid #292828;color: #d6d6d6;">{{ i.textname }}</td>
+                                    <td style="border-right: 1px solid #292828;" style = "padding-left: 10px;"><i class="bi bi-pencil-square" style = "padding-left: 20px;"></i></td>
+                                    <td><i class="bi bi-trash" style = "padding-left: 20px;"></i></td>
+                                  </tr>
+                                  {% endfor %}
+                                </tbody>
+                              </table>
+                        </div>
+                        <div class="data-display" id = "two-images-display" style="display: none;">
+                            <table style="width: 100%; border-collapse: collapse; font-family: Arial, sans-serif; font-size: 14px;">
+                                <thead style="background-color: #777777; color: rgb(235, 235, 235);">
+                                  <tr>
+                                    <th style="padding-left: 10px; width: 70%; height: 20px; text-align: left; border-right: 1px solid #292828;">Image Names</th>
+                                    <th style="width: 15%; height: 20px; border-right: 1px solid #292828;">Edit</th>
+                                    <th style="width: 15%; height: 20px;">Delete</th>
+                                  </tr>
+                                </thead>
+                                <tbody>
+                                  {% for i in imagenames %}
+                                  <tr style="border-bottom: 1px solid #383838; background-color: rgb(59, 59, 59);align-items: center;">
+                                    <td style="padding-left: 10px; height: 30px; border-right: 1px solid #292828;color: #d6d6d6;">{{ i.imagename }}</td>
+                                    <td style="border-right: 1px solid #292828;" style = "padding-left: 10px;"><i class="bi bi-pencil-square" style = "padding-left: 20px;"></i></td>
+                                    <td><i class="bi bi-trash" style = "padding-left: 20px;"></i></td>
+                                  </tr>
+                                  {% endfor %}
+                                </tbody>
+                              </table>
+
+                        </div>
+                        <div class="data-display" id = "two-button-display" style="display: none;">
+                            <table style="width: 100%; border-collapse: collapse; font-family: Arial, sans-serif; font-size: 14px;">
+                                <thead style="background-color: #777777; color: rgb(235, 235, 235);">
+                                  <tr>
+                                    <th style="padding-left: 10px; width: 70%; height: 20px; text-align: left; border-right: 1px solid #292828;">Div Names</th>
+                                    <th style="width: 15%; height: 20px; border-right: 1px solid #292828;">Edit</th>
+                                    <th style="width: 15%; height: 20px;">Delete</th>
+                                  </tr>
+                                </thead>
+                                <tbody>
+                                  {% for i in divnames %}
+                                  <tr style="border-bottom: 1px solid #383838; background-color: rgb(59, 59, 59);align-items: center;">
+                                    <td style="padding-left: 10px; height: 30px; border-right: 1px solid #292828;color: #d6d6d6;">{{ i.divname }}</td>
+                                    <td style="border-right: 1px solid #292828;" style = "padding-left: 10px;"><i class="bi bi-pencil-square" style = "padding-left: 20px;"></i></td>
+                                    <td><i class="bi bi-trash" style = "padding-left: 20px;"></i></td>
+                                  </tr>
+                                  {% endfor %}
+                                </tbody>
+                              </table>
+                        </div>
+                        <div class="data-display" id = "two-navbar-display" style="display: none;">
+                                <table style="width: 100%; border-collapse: collapse; font-family: Arial, sans-serif; font-size: 14px;">
+                                    <thead style="background-color: #777777; color: rgb(235, 235, 235);">
+                                    <tr>
+                                        <th style="padding-left: 10px; width: 70%; height: 20px; text-align: left; border-right: 1px solid #292828;">Div Names</th>
+                                        <th style="width: 15%; height: 20px; border-right: 1px solid #292828;">Edit</th>
+                                        <th style="width: 15%; height: 20px;">Delete</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    {% for i in divnames %}
+                                    <tr style="border-bottom: 1px solid #383838; background-color: rgb(59, 59, 59);align-items: center;">
+                                        <td style="padding-left: 10px; height: 30px; border-right: 1px solid #292828;color: #d6d6d6;">{{ i.divname }}</td>
+                                        <td style="border-right: 1px solid #292828;" style = "padding-left: 10px;"><i class="bi bi-pencil-square" style = "padding-left: 20px;"></i></td>
+                                        <td><i class="bi bi-trash" style = "padding-left: 20px;"></i></td>
+                                    </tr>
+                                    {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>   
+                        </div>
+                        <textarea style = "height:250px;width:360px;margin-left:20px;margin-top: 30px;border-radius: 15px;background-color: black;color: rgb(156, 156, 15);font-family: monospace;padding: 10px;">{{ project.htmlcode }}</textarea> 
+                    </div>
+                     <div class="Animation-box" id="Animation-box">
+                        <div class="move-div">
+                         <div class="Animation-close">
+                                <p style="margin-top:-6px;margin-left: -1px;">x</p>
+                            </div>
+                        </div>
+                        <div class = "tab-component" data-prefix="three">
+                        <div class="tabs">
+                            <div class="tab" data-index="0" data-target="div-display"><p style="color: rgb(211, 211, 211);font-size: small;">div</p></div>
+                            <div class="tab" data-index="1" data-target="input-display"><p style="color: rgb(211, 211, 211);font-size: small;">input</p></div>
+                            <div class="tab" data-index="2" data-target="text-display"><p style="color: rgb(211, 211, 211);font-size: small;">text</p></div>
+                            <div class="tab" data-index="3" data-target="images-display"><p style="color: rgb(211, 211, 211);font-size: small;">images</p></div>
+                            <div class="tab" data-index="4" data-target="button-display"><p style="color: rgb(211, 211, 211);font-size: small;">button</p></div>
+                            <div class="tab" data-index="5" data-target="navbar-display"><p style="color: rgb(211, 211, 211);font-size: small;">navbar</p></div>
+                        </div>
+                          
+                        <div class="data-display" id = "three-div-display" style="display: block;">
+                            <table style="width: 100%; border-collapse: collapse; font-family: Arial, sans-serif; font-size: 14px;">
+                                <thead style="background-color: #777777; color: rgb(235, 235, 235);">
+                                  <tr>
+                                    <th style="padding-left: 10px; width: 70%; height: 20px; text-align: left; border-right: 1px solid #292828;">Div Names</th>
+                                    <th style="width: 15%; height: 20px; border-right: 1px solid #292828;">Edit</th>
+                                    <th style="width: 15%; height: 20px;">Delete</th>
+                                  </tr>
+                                </thead>
+                                <tbody>
+                                  {% for i in divnames %}
+                                  <tr style="border-bottom: 1px solid #383838; background-color: rgb(59, 59, 59);align-items: center;">
+                                    <td onclick="selectDiv('{{ i.divname }}')" style="padding-left: 10px; height: 30px; border-right: 1px solid #292828;color: #d6d6d6;">{{ i.divname }}</td>
+                                    <td style="border-right: 1px solid #292828;" style = "padding-left: 10px;"><i class="bi bi-pencil-square" style = "padding-left: 20px;"></i></td>
+                                    <td><i class="bi bi-trash" style = "padding-left: 20px;"></i></td>
+                                  </tr>
+                                  {% endfor %}
+                                </tbody>
+                              </table>
+                              
+                        </div>
+                        <div class="data-display" id = "three-input-display" style="display: none;">
+                            <table style="width: 100%; border-collapse: collapse; font-family: Arial, sans-serif; font-size: 14px;">
+                                <thead style="background-color: #777777; color: rgb(235, 235, 235);">
+                                  <tr>
+                                    <th style="padding-left: 10px; width: 70%; height: 20px; text-align: left; border-right: 1px solid #292828;">Input Names</th>
+                                    <th style="width: 15%; height: 20px; border-right: 1px solid #292828;">Edit</th>
+                                    <th style="width: 15%; height: 20px;">Delete</th>
+                                  </tr>
+                                </thead>
+                                <tbody>
+                                  {% for i in inputnames %}
+                                  <tr style="border-bottom: 1px solid #383838; background-color: rgb(59, 59, 59);align-items: center;">
+                                    <td style="padding-left: 10px; height: 30px; border-right: 1px solid #292828;color: #d6d6d6;">{{ i.inputname }}</td>
+                                    <td style="border-right: 1px solid #292828;" style = "padding-left: 10px;"><i class="bi bi-pencil-square" style = "padding-left: 20px;"></i></td>
+                                    <td><i class="bi bi-trash" style = "padding-left: 20px;"></i></td>
+                                  </tr>
+                                  {% endfor %}
+                                </tbody>
+                              </table>
+                            </table>
+                        </div>
+                        <div class="data-display" id = "three-text-display" style="display: none;">
+                            <table style="width: 100%; border-collapse: collapse; font-family: Arial, sans-serif; font-size: 14px;">
+                                <thead style="background-color: #777777; color: rgb(235, 235, 235);">
+                                  <tr>
+                                    <th style="padding-left: 10px; width: 70%; height: 20px; text-align: left; border-right: 1px solid #292828;">Text Names</th>
+                                    <th style="width: 15%; height: 20px; border-right: 1px solid #292828;">Edit</th>
+                                    <th style="width: 15%; height: 20px;">Delete</th>
+                                  </tr>
+                                </thead>
+                                <tbody>
+                                  {% for i in textnames %}
+                                  <tr style="border-bottom: 1px solid #383838; background-color: rgb(59, 59, 59);align-items: center;">
+                                    <td style="padding-left: 10px; height: 30px; border-right: 1px solid #292828;color: #d6d6d6;">{{ i.textname }}</td>
+                                    <td style="border-right: 1px solid #292828;" style = "padding-left: 10px;"><i class="bi bi-pencil-square" style = "padding-left: 20px;"></i></td>
+                                    <td><i class="bi bi-trash" style = "padding-left: 20px;"></i></td>
+                                  </tr>
+                                  {% endfor %}
+                                </tbody>
+                              </table>
+                        </div>
+                        <div class="data-display" id = "three-images-display" style="display: none;">
+                            <table style="width: 100%; border-collapse: collapse; font-family: Arial, sans-serif; font-size: 14px;">
+                                <thead style="background-color: #777777; color: rgb(235, 235, 235);">
+                                  <tr>
+                                    <th style="padding-left: 10px; width: 70%; height: 20px; text-align: left; border-right: 1px solid #292828;">Image Names</th>
+                                    <th style="width: 15%; height: 20px; border-right: 1px solid #292828;">Edit</th>
+                                    <th style="width: 15%; height: 20px;">Delete</th>
+                                  </tr>
+                                </thead>
+                                <tbody>
+                                  {% for i in imagenames %}
+                                  <tr style="border-bottom: 1px solid #383838; background-color: rgb(59, 59, 59);align-items: center;">
+                                    <td style="padding-left: 10px; height: 30px; border-right: 1px solid #292828;color: #d6d6d6;">{{ i.imagename }}</td>
+                                    <td style="border-right: 1px solid #292828;" style = "padding-left: 10px;"><i class="bi bi-pencil-square" style = "padding-left: 20px;"></i></td>
+                                    <td><i class="bi bi-trash" style = "padding-left: 20px;"></i></td>
+                                  </tr>
+                                  {% endfor %}
+                                </tbody>
+                              </table>
+
+                        </div>
+                        <div class="data-display" id = "three-button-display" style="display: none;">
+                            <table style="width: 100%; border-collapse: collapse; font-family: Arial, sans-serif; font-size: 14px;">
+                                <thead style="background-color: #777777; color: rgb(235, 235, 235);">
+                                  <tr>
+                                    <th style="padding-left: 10px; width: 70%; height: 20px; text-align: left; border-right: 1px solid #292828;">Div Names</th>
+                                    <th style="width: 15%; height: 20px; border-right: 1px solid #292828;">Edit</th>
+                                    <th style="width: 15%; height: 20px;">Delete</th>
+                                  </tr>
+                                </thead>
+                                <tbody>
+                                  {% for i in divnames %}
+                                  <tr style="border-bottom: 1px solid #383838; background-color: rgb(59, 59, 59);align-items: center;">
+                                    <td style="padding-left: 10px; height: 30px; border-right: 1px solid #292828;color: #d6d6d6;">{{ i.divname }}</td>
+                                    <td style="border-right: 1px solid #292828;" style = "padding-left: 10px;"><i class="bi bi-pencil-square" style = "padding-left: 20px;"></i></td>
+                                    <td><i class="bi bi-trash" style = "padding-left: 20px;"></i></td>
+                                  </tr>
+                                  {% endfor %}
+                                </tbody>
+                              </table>
+                        </div>
+                        <div class="data-display" id = "three-navbar-display" style="display: none;">
+                                <table style="width: 100%; border-collapse: collapse; font-family: Arial, sans-serif; font-size: 14px;">
+                                    <thead style="background-color: #777777; color: rgb(235, 235, 235);">
+                                    <tr>
+                                        <th style="padding-left: 10px; width: 70%; height: 20px; text-align: left; border-right: 1px solid #292828;">Div Names</th>
+                                        <th style="width: 15%; height: 20px; border-right: 1px solid #292828;">Edit</th>
+                                        <th style="width: 15%; height: 20px;">Delete</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    {% for i in divnames %}
+                                    <tr style="border-bottom: 1px solid #383838; background-color: rgb(59, 59, 59);align-items: center;">
+                                        <td style="padding-left: 10px; height: 30px; border-right: 1px solid #292828;color: #d6d6d6;">{{ i.divname }}</td>
+                                        <td style="border-right: 1px solid #292828;" style = "padding-left: 10px;"><i class="bi bi-pencil-square" style = "padding-left: 20px;"></i></td>
+                                        <td><i class="bi bi-trash" style = "padding-left: 20px;"></i></td>
+                                    </tr>
+                                    {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>   
+                        </div>
+                       <div style="display:flex;gap:20px;margin-bottom:10px;margin-left: 110px;margin-top: 20px;">
+
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="animType"
+                                id="hoverRadio" value="hover" checked>
+                            <label class="form-check-label" for="hoverRadio"  style = "color:white">
+                            Hover
+                            </label>
+                        </div>
+
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="animType"
+                                id="activeRadio" value="active">
+                            <label class="form-check-label" for="activeRadio" style = "color:white">
+                            Active
+                            </label>
+                        </div>
+
+                        </div>
+                       <div class="data-display" id="one-div-display" style="display: block; margin-top: 30px;">
+                        <table style="width: 100%; border-collapse: collapse; font-family: Arial, sans-serif; font-size: 14px;">
+                          <thead style="background-color: #777777; color: rgb(235, 235, 235);">
+                            <tr>
+                              <th style="padding-left: 10px; width: 45%; height: 20px; text-align: left; border-right: 1px solid #292828;">Attribute</th>
+                              <th style="padding-left: 10px; width: 45%; height: 20px; text-align: left; border-right: 1px solid #292828;">Value</th>
+                              <th style="padding-left: 10px; width: 10%; height: 20px; text-align: left; border-right: 1px solid #292828;">Delete</th>
+                             
+                            </tr>
+                          </thead>
+                         
+                           
+                                <tbody id="styles-tbody-anim"></tbody>
+                               
+                         
+                        </table>
+                      </div>
+                    </div>
+                      
+                    <div style="overflow-y:hidden; overflow-x: hidden; height: 100%; width: 100%;">
+                        <iframe 
+                        id="preview-iframe"
+                        src="{% url 'projects' %}" 
+                        style="overflow-y: auto; width: 100%; height: 100%; transform: scale(1); transform-origin: top left; border: none;">
+                    </iframe>
+                    
+                    </div>
+                    
+    
+   
+                    </div>
+                      
+                </div> 
+            </div>
+        </div>
+        
+        {% if messages %}
+  {% for message in messages %}
+    {% if 'divname' in message.tags %}
+      <div class="overlay" id="dialogOverlay1" style="display:flex !important;">
+    {% else %}
+      <div class="overlay" id="dialogOverlay1">
+    {% endif %}
+  {% endfor %}
+{% else %}
+  <div class="overlay" id="dialogOverlay1">
+{% endif %}
+    <div class="dialog-box">
+        <form  action = "{% url 'divdetails'%}" method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <h3>New Division</h3>
+            <div style = "margin-top:20px;margin-left:10px;text-align: left;">
+                <label >Division Name:</label>
+            </div>
+            <input name = "divname" placeholder = " Enter Div Name" style = "padding: 15px;margin-top: 10px;height:40px;border-radius: 20px;width:450px;border: 1px solid rgb(177, 177, 177)">
+            {% if messages %}
+                    <div style="color: red; margin-top: 10px;">
+                        {% for message in messages %}
+                        {% if 'divname' in message.tags %}
+                            {{ message }}
+                            {% endif %}
+                        {% endfor %}
+                       
+                    </div>
+                {% endif %}
+            <div style="display: flex;  gap: 25px; margin-top: 10px;">
+                <div style="margin-left: 20px; text-align: left;">
+                    <label>Position:</label><br>
+                    <select name="positionattrib" id="positions"
+                        style="padding-bottom: 1px; padding-left: 5px; color: rgb(141, 141, 141); background: transparent; 
+                                box-sizing: border-box; margin-top: 10px; height: 30px; border-radius: 5px; width: 100px; 
+                                border: 1px solid rgb(177, 177, 177);">
+                        <option value = "" selected>Select</option>
+                        <option value="static">static</option>
+                        <option value="relative">relative</option>
+                        <option value="absolute">absolute</option>
+                        <option value="fixed">fixed</option>
+                        <option value="sticky">sticky</option>
+                        <option value="inherit">inherit</option>
+                        <option value="initial">initial</option>
+                        <option value="unset">unset</option>
+                    </select>
+                </div>
+                 
+                
+                <div style="text-align: left; display: none;" id="leftContainer"> 
+                    <label>Left:</label><br>
+                    <div class="custom-input-select">
+                        <input type="text" class="custom-text-input" placeholder="  --" name = "left">
+                        <select class="custom-select" style = "color: rgb(141, 141, 141)" name = "unitl">
+                            <option value="px" selected>px</option>
+                            <option value="rem">rem</option>
+                            <option value="vw">vw</option>
+                            <option value="vh">vh</option>
+                            <option value="%">%</option>
+                        </select>
+                    </div>
+                </div>
+                    
+                <div style="text-align: left; display: none;" id="topContainer">
+                    <label>Top:</label><br>
+                    <div class="custom-input-select">
+                        <input type="text" class="custom-text-input" placeholder="  --" name = "top">
+                        <select class="custom-select" style = "color: rgb(141, 141, 141)" name = "unitt">
+                            <option value="px" selected>px</option>
+                            <option value="rem">rem</option>
+                            <option value="vw">vw</option>
+                            <option value="vh">vh</option>
+                            <option value="%">%</option>
+                        </select>
+                    </div>
+                </div>
+            </div>         
+                <div style = "display:flex; height :50px;margin-left: 20px;gap:10px;margin-top: 10px;">
+                    <div style="text-align: left; " > 
+                        <label>Height:</label><br>
+                        <div class="custom-input-select">
+                            <input type="text" class="custom-text-input" placeholder="  --" name = "heightd">
+                            <select class="custom-select" style = "color: rgb(141, 141, 141)" name = "unithd">
+                                <option value="px" selected>px</option>
+                                <option value="rem">rem</option>
+                                <option value="vw">vw</option>
+                                <option value="vh">vh</option>
+                                <option value="%">%</option>
+                            </select>
+                        </div>
+                    </div>
+                        
+                    <div style="text-align: left;" >
+                        <label>Width:</label><br>
+                        <div class="custom-input-select">
+                            <input type="text" class="custom-text-input" placeholder="  --" name = "widthd">
+                            <select class="custom-select" style = "color: rgb(141, 141, 141)" name = "unitwd">
+                                <option value="px" selected>px</option>
+                                <option value="rem">rem</option>
+                                <option value="vw">vw</option>
+                                <option value="vh">vh</option>
+                                <option value="%">%</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div>
+                    <i class="bi bi-rulers"></i>
+                </div>
+                <div class="color-selector" style="display:flex !important;margin-left: 15px;margin-top: 20px;">
+                    <div class="color-label-container">
+                        <label>Background-color:</label><br>
+                        <select class="color-selector-dropdown">
+                            <option value="">Select Color</option>
+                            <option value="#FF0000">Red</option>
+                            <option value="#00FF00">Green</option>
+                            <option value="#0000FF">Blue</option>
+                            <option value="#FFFF00">Yellow</option>
+                            <option value="#FF00FF">Magenta</option>
+                            <option value="#00FFFF">Cyan</option>
+                        </select>
+                    </div>
+                
+                    <div style="margin-top: 20px; width:auto; display: flex; gap:10px;">
+                        <input type="color" class="color-selector-picker" style="margin-top:25px;padding:5px;margin-left: 5px;border-radius: 8px;">
+                        <input type="text" class="color-selector-code" placeholder="Hex Code" readonly="" style="margin-top:17px;" name="bgcolor">
+                        <div class="color-selector-preview"></div>
+                    </div>
+                </div>
+                
+                <div style="margin-top: 10px;">
+                    <div style = "display:flex;">
+                    <div style="margin-left: 20px; text-align: left;">
+                        <label>Parent:</label><br>
+                        <select name="parents"
+                            style="padding-bottom: 1px; padding-left: 5px; color: rgb(141, 141, 141); background: transparent; 
+                                    box-sizing: border-box; margin-top: 10px; height: 30px; border-radius: 5px; width: 100px; 
+                                    border: 1px solid rgb(177, 177, 177);">
+                            <option selected>None</option>
+                            {% for i in divnames %}
+                            <option value="{{i.divname}}">{{i.divname}}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+            </div>
+                
+                <div style = "margin-top: 10px;display:flex; align-items: center;text-align: center;margin-left: 50px;">
+                    <button type="button" class="close-btn" onclick="closeDialog('dialogOverlay1')">Close</button>
+                    <button class="create-btn" type="submit">Create</button>
+                </div>
+            </div>
+        </form> 
+        </div>
+        {% if messages %}
+  {% for message in messages %}
+    {% if 'imgname' in message.tags or 'img' in message.tags %}
+      <div class="overlay" id="dialogOverlay2" style="display:flex !important;">
+    {% else %}
+      <div class="overlay" id="dialogOverlay2" style = "display:none">
+    {% endif %}
+  {% endfor %}
+{% else %}
+  <div class="overlay" id="dialogOverlay2" style = "display:none">
+{% endif %}
+    <div class="dialog-box">
+                <form method="post" enctype="multipart/form-data" action = "{% url 'imagedetails' %}">
+                {% csrf_token %}
+                <h3>Insert Image</h3>
+                <div style = "margin-top:20px;margin-left:10px;text-align: left;">
+                    <label >Image Name:</label>
+                </div>
+                <input name = "imgname" placeholder = " Enter Image Name" style = "padding: 15px;margin-top: 10px;height:40px;border-radius: 20px;width:450px;border: 1px solid rgb(177, 177, 177)">
+                {% if messages %}
+                        <div style="color: red; margin-top: 10px;">
+                            {% for message in messages %}
+                                {% if 'imgname' in message.tags %}
+                                    {{ message }}
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                        <div style = "margin-top:20px;margin-left:10px;text-align: left;">
+                            <label >Image Upload:</label>
+                        </div>
+                        <input name = "image" style = "padding: 15px;margin-top: 10px;height:40px;width:450px;" type = "file" name = "images">
+                        {% if messages %}
+                        <div style="color: red; margin-top: 10px;">
+                            {% for message in messages %}
+                                {% if 'img' in message.tags %}
+                                    {{ message }}
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                        <div style="display: flex;  gap: 25px; margin-top: 20px;margin-left: 15px;">
+                            <div style="text-align: left;"> 
+                                <label>Width:</label><br>
+                                <div class="custom-input-select">
+                                    <input type="text" class="custom-text-input" placeholder="  --" name = "widthimg">
+                                    <select class="custom-select" style = "color: rgb(141, 141, 141)" name = "unitwimg">
+                                        <option value="px" selected>px</option>
+                                        <option value="rem">rem</option>
+                                        <option value="vw">vw</option>
+                                        <option value="vh">vh</option>
+                                        <option value="%">%</option>
+                                    </select>
+                                </div>
+                            </div>
+                            
+                            <div style="text-align: left;">
+                                <label>Height:</label><br>
+                                <div class="custom-input-select">
+                                    <input type="text" class="custom-text-input" placeholder="  --" name = "heightimg">
+                                    <select class="custom-select" style = "color: rgb(141, 141, 141)" name = "unithimg">
+                                        <option value="px" selected>px</option>
+                                        <option value="rem">rem</option>
+                                        <option value="vw">vw</option>
+                                        <option value="%">%</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div style="margin-left: 20px; text-align: left;">
+                                <label>Parent:</label><br>
+                                <select name="parents"
+                                    style="padding-bottom: 1px; padding-left: 5px; color: rgb(141, 141, 141); background: transparent; 
+                                            box-sizing: border-box; margin-top: 10px; height: 30px; border-radius: 5px; width: 100px; 
+                                            border: 1px solid rgb(177, 177, 177);">
+                                    <option selected>None</option>
+                                    {% for i in divnames %}
+                                    <option value="{{i.divname}}">{{i.divname}}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+                        
+                        
+                        <div style = "margin-top: 10px;display:flex; align-items: center;text-align: center;margin-left: 50px;">
+                            <button type="button" class="close-btn" onclick="closeDialog('dialogOverlay2')">Close</button>
+                            <button class="create-btn" type="submit">Create</button>
+                        </div>
+                </form> 
+             </div>
+        </div>
+        {% if messages %}
+        {% for message in messages %}
+          {% if 'textname' in message.tags %}
+            <div class="overlay" id="dialogOverlay3" style="display:flex !important;">
+          {% else %}
+            <div class="overlay" id="dialogOverlay3">
+          {% endif %}
+        {% endfor %}
+      {% else %}
+        <div class="overlay" id="dialogOverlay3">
+      {% endif %}
+    <div class="dialog-box">
+        <form method="post" enctype="multipart/form-data" action = "{% url 'textdetails' %}">
+            {% csrf_token %}
+            <h3>Insert Text</h3>
+        <div style = "margin-top:20px;margin-left:10px;text-align: left;">
+            <label >Text Name:</label>
+        </div>
+        <input name = "textname" placeholder = " Enter Text Name" style = "padding: 15px;margin-top: 10px;height:40px;border-radius: 20px;width:450px;border: 1px solid rgb(177, 177, 177)">
+        {% if messages %}
+                        <div style="color: red; margin-top: 10px;">
+                            {% for message in messages %}
+                                {% if 'textname' in message.tags %}
+                                    {{ message }}
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+        <div style = "margin-top:20px;margin-left:10px;text-align: left;">
+            <label >Content:</label>
+        </div>
+        <input name = "content" placeholder = " Enter Text Name" style = "padding: 15px;margin-top: 10px;height:40px;border-radius: 20px;width:450px;border: 1px solid rgb(177, 177, 177)">
+        <div style="display: flex;  gap: 25px; margin-top: 20px;margin-left: 15px;">
+            <div style="text-align: left;"> 
+                <label>Font Size:</label><br>
+                <div class="custom-input-select">
+                    <input type="text" class="custom-text-input" placeholder="  --" name = "fontsize">
+                    <select class="custom-select" style = "color: rgb(141, 141, 141)" name = "unitfont">
+                        <option value="px" selected>px</option>
+                        <option value="rem">rem</option>
+                        <option value="vw">vw</option>
+                        <option value="vh">vh</option>
+                        <option value="%">%</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div style="text-align: left;">
+                <label>Fonts:</label><br>
+                <div class="custom-input-select" style="border: none;width: 200px;">
+                    <select name="fonttype"
+                        style="padding-bottom: 1px; padding-left: 5px; color: rgb(141, 141, 141); background: transparent; 
+                               box-sizing: border-box; height: 30px; border-radius: 5px; width: 180px; margin-top: 1px;
+                               border: 1px solid rgb(177, 177, 177);">
+                        <option selected>None</option>
+                        <option value="Arial">Arial</option>
+                        <option value="Helvetica">Helvetica</option>
+                        <option value="Verdana">Verdana</option>
+                        <option value="Tahoma">Tahoma</option>
+                        <option value="Trebuchet MS">Trebuchet MS</option>
+                        <option value="Times New Roman">Times New Roman</option>
+                        <option value="Georgia">Georgia</option>
+                        <option value="Garamond">Garamond</option>
+                        <option value="Courier New">Courier New</option>
+                        <option value="Lucida Console">Lucida Console</option>
+                        <option value="Comic Sans MS">Comic Sans MS</option>
+                        <option value="Impact">Impact</option>
+                        <option value="system-ui">System UI</option>
+                        <option value="monospace">Monospace</option>
+                        <option value="sans-serif">Sans-serif</option>
+                        <option value="serif">Serif</option>
+                    </select>
+                </div>
+            </div>
+            <div style="text-align: left;margin-left: -20px;">
+                <label>Parent:</label><br>
+                <select name="parents"
+                    style="padding-bottom: 1px; padding-left: 5px; color: rgb(141, 141, 141); background: transparent; 
+                            box-sizing: border-box; margin-top: 10px; height: 30px; border-radius: 5px; width: 100px; 
+                            border: 1px solid rgb(177, 177, 177);">
+                    <option selected>None</option>
+                    {% for i in divnames %}
+                    <option value="{{i.divname}}">{{i.divname}}</option>
+                    {% endfor %}
+                </select>
+            </div>
+        </div>
+        <div class="color-selector" style = "display:flex !important;margin-left: 15px;margin-top: 20px;">
+            <div class="color-label-container">
+                <label style = "margin-left: -50px;">Text-color:</label><br>
+                <select class="color-selector-dropdown">
+                    <option value="">Select Color</option>
+                    <option value="#FF0000">Red</option>
+                    <option value="#00FF00">Green</option>
+                    <option value="#0000FF">Blue</option>
+                    <option value="#FFFF00">Yellow</option>
+                    <option value="#FF00FF">Magenta</option>
+                    <option value="#00FFFF">Cyan</option>
+                </select>
+            </div>
+        
+            <div style="margin-top: 20px; width:auto; display: flex; gap:10px;">
+                <input type="color" class="color-selector-picker" style="margin-top:25px;padding:5px;margin-left: 5px;border-radius: 8px;">
+                <input type="text" class="color-selector-code" placeholder="Hex Code" readonly style="margin-top:17px;" name="textcolor">
+                <div class="color-selector-preview"></div>
+            </div>
+        </div>
+        
+            
+        
+        <div style = "margin-top: 10px;display:flex; align-items: center;text-align: center;margin-left: 50px;">
+            <button type="button" class="close-btn" onclick="closeDialog('dialogOverlay3')">Close</button>
+            <button class="create-btn" type="submit">Create</button>
+        </div>
+        </form>
+    </div>
+        </div>
+        {% if messages %}
+        {% for message in messages %}
+          {% if 'inputname' in message.tags %}
+            <div class="overlay" id="dialogOverlay4" style="display:flex !important;">
+          {% else %}
+            <div class="overlay" id="dialogOverlay4">
+          {% endif %}
+        {% endfor %}
+      {% else %}
+        <div class="overlay" id="dialogOverlay4">
+      {% endif %}
+    <div class="dialog-box">
+        <form method="post" enctype="multipart/form-data" action = "{% url 'inputdetails' %}">
+            {% csrf_token %}
+            <h3>Insert Input</h3>
+        <div style = "margin-top:20px;margin-left:10px;text-align: left;">
+            <label >Input Name:</label>
+        </div>
+        <input name = "inputname" placeholder = " Enter Text Name" style = "padding: 15px;margin-top: 10px;height:40px;border-radius: 20px;width:450px;border: 1px solid rgb(177, 177, 177)">
+        {% if messages %}
+                        <div style="color: red; margin-top: 10px;">
+                            {% for message in messages %}
+                                {% if 'inputname' in message.tags %}
+                                    {{ message }}
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+        <div style = "margin-top:20px;margin-left:10px;text-align: left;">
+            <label >Placeholder:</label>
+        </div>
+        <input name = "placeholder" placeholder = " Enter Placeholder" style = "padding: 15px;margin-top: 10px;height:40px;border-radius: 20px;width:450px;border: 1px solid rgb(177, 177, 177)">
+        <div style="display: flex;  gap: 25px; margin-top: 20px;margin-left: 15px;">
+            
+            
+            <div style="text-align: left;">
+                <label>Input Type:</label><br>
+                <div class="custom-input-select" style="border: none; width: 200px;">
+                    <select name="inputtype"
+                        style="padding-bottom: 1px; padding-left: 5px; color: rgb(141, 141, 141); background: transparent; 
+                               box-sizing: border-box; height: 30px; border-radius: 5px; width: 180px; margin-top: 1px;
+                               border: 1px solid rgb(177, 177, 177);">
+                        <option selected disabled>Choose input type</option>
+                        
+                        <option value="text">text</option>
+                        <option value="password">password</option>
+                        <option value="email">email</option>
+                        <option value="search">search</option>
+                        <option value="tel">tel</option>
+                        <option value="url">url</option>
+            
+                     
+                        <option value="number">number</option>
+                        <option value="range">range</option>
+            
+                  
+                        <option value="date">date</option>
+                        <option value="time">time</option>
+                        <option value="datetime-local">datetime-local</option>
+                        <option value="month">month</option>
+                        <option value="week">week</option>
+            
+                    
+                        <option value="checkbox">checkbox</option>
+                        <option value="radio">radio</option>
+            
+                       
+                        <option value="file">file</option>
+                        <option value="hidden">hidden</option>
+                        <option value="image">image</option>
+            
+                       
+                        <option value="submit">submit</option>
+                        <option value="reset">reset</option>
+                        <option value="button">button</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div style="text-align: left;margin-left: -20px;">
+                <label>Parent:</label><br>
+                <select name="parent"
+                    style="padding-bottom: 1px; padding-left: 5px; color: rgb(141, 141, 141); background: transparent; 
+                            box-sizing: border-box; margin-top: 10px; height: 30px; border-radius: 5px; width: 100px; 
+                            border: 1px solid rgb(177, 177, 177);">
+                    <option selected>None</option>
+                    {% for i in divnames %}
+                    <option value="{{i.divname}}">{{i.divname}}</option>
+                    {% endfor %}
+                </select>
+            </div>
+        </div>
+        <div style = "display:flex; height :50px;margin-left: 20px;gap:10px;margin-top: 10px;">
+            <div style="text-align: left; " > 
+                <label>Height:</label><br>
+                <div class="custom-input-select">
+                    <input type="text" class="custom-text-input" placeholder="  --" name = "heightinput">
+                    <select class="custom-select" style = "color: rgb(141, 141, 141)" name = "unithinput">
+                        <option value="px" selected>px</option>
+                        <option value="rem">rem</option>
+                        <option value="vw">vw</option>
+                        <option value="vh">vh</option>
+                        <option value="%">%</option>
+                    </select>
+                </div>
+            </div>
+                
+            <div style="text-align: left;" >
+                <label>Width:</label><br>
+                <div class="custom-input-select">
+                    <input type="text" class="custom-text-input" placeholder="  --" name = "inputwidth">
+                    <select class="custom-select" style = "color: rgb(141, 141, 141)" name = "unitwinput">
+                        <option value="px" selected>px</option>
+                        <option value="rem">rem</option>
+                        <option value="vw">vw</option>
+                        <option value="vh">vh</option>
+                        <option value="%">%</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        
+            
+        
+        <div style = "margin-top: 20px;display:flex; align-items: center;text-align: center;margin-left: 50px;">
+            <button type="button" class="close-btn" onclick="closeDialog('dialogOverlay3')">Close</button>
+            <button class="create-btn" type="submit">Create</button>
+        </div>
+        </form>
+    </div>
+        </div>
+        
+    
+</body>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+   
+   
+   document.querySelectorAll(".color-selector").forEach(container => {
+    const dropdown = container.querySelector(".color-selector-dropdown");
+    const picker = container.querySelector(".color-selector-picker");
+    const codeInput = container.querySelector(".color-selector-code");
+    const preview = container.querySelector(".color-selector-preview");
+
+    function updateColor(value) {
+        codeInput.value = value;
+        preview.style.backgroundColor = value;
+    }
+
+    dropdown.addEventListener("change", function () {
+        updateColor(this.value);
+        picker.value = this.value;
+    });
+
+    picker.addEventListener("input", function () {
+        updateColor(this.value);
+    });
+
+    codeInput.addEventListener("input", function () {
+        updateColor(this.value);
+    });
+});
+
+                 const menu = document.querySelector(".menu");
+            const bis = document.querySelector(".bis");
+        const semicircle = document.querySelector(".semicircle");
+
+        // Function to add rotation to both semicircle and bis
+        function addRotation() {
+            semicircle.classList.add("rotate-semicircle");
+            bis.style.transform = "rotate(-90deg)";  // Keep bis rotated
+        }
+
+        // Function to remove rotation only when neither is hovered
+        function removeRotation() {
+            if (!menu.matches(":hover") && !semicircle.matches(":hover")) {
+                semicircle.classList.remove("rotate-semicircle");
+                bis.style.transform = "rotate(0deg)"; // Reset bis rotation
+            }
+        }
+
+        // Add hover event listeners
+        menu.addEventListener("mouseenter", addRotation);
+        semicircle.addEventListener("mouseenter", addRotation);
+
+        menu.addEventListener("mouseleave", removeRotation);
+        semicircle.addEventListener("mouseleave", removeRotation);
+
+        function toggleDiv(divId) {
+    let clickedDiv = document.getElementById(divId);
+    let movingDivs = document.querySelectorAll(".tooloptions, .tooloptions2");
+
+    // If the clicked div is already active, just remove "active" (move it back)
+    if (clickedDiv.classList.contains("active")) {
+        clickedDiv.classList.remove("active");
+    } else {
+        // Otherwise, remove "active" from all divs and activate the clicked one
+        movingDivs.forEach(div => div.classList.remove("active"));
+        clickedDiv.classList.add("active");
+    }
+}
+
+
+$(function(){
+    $("[data-toggle='tooltip']").tooltip();
+})
+</script>
+<script>
+       function openDialog(dialogId) {
+  document.getElementById(dialogId).style.display = "flex";
+}
+
+function closeDialog(dialogId) {
+  document.getElementById(dialogId).style.display = "none";
+}
+document.querySelectorAll('.overlay').forEach(overlay => {
+  overlay.addEventListener('click', function(e) {
+    if (e.target === this) {
+      this.style.display = 'none';
+    }
+  });
+});
+
+const workArea = document.getElementById("work-areas");
+
+function makeDraggable(boxId, closeSelector, defaultTop, defaultLeft) {
+  const box = document.getElementById(boxId);
+  const closeBtn = box.querySelector(closeSelector);
+  let isDragging = false, offsetX = 0, offsetY = 0;
+
+  window["open" + boxId.replace(/(^\w|-\w)/g, m => m.replace("-", "").toUpperCase())] = function () {
+    box.style.display = "block";
+    box.style.top = defaultTop;
+    box.style.left = defaultLeft;
+  };
+
+  closeBtn.addEventListener("click", () => {
+    box.style.display = "none";
+  });
+
+  box.addEventListener("mousedown", function (e) {
+    if (!e.target.closest(".move-div")) return;
+    isDragging = true;
+    const rect = box.getBoundingClientRect();
+    offsetX = e.clientX - rect.left;
+    offsetY = e.clientY - rect.top;
+    document.body.style.userSelect = "none";
+    box.style.cursor = "grabbing";
+  });
+
+  document.addEventListener("mouseup", () => {
+    isDragging = false;
+    document.body.style.userSelect = "";
+    if (box) box.style.cursor = "default";
+  });
+
+  document.addEventListener("mousemove", (e) => {
+    if (!isDragging) return;
+    const parentRect = workArea.getBoundingClientRect();
+    let newLeft = e.clientX - parentRect.left - offsetX;
+    let newTop = e.clientY - parentRect.top - offsetY;
+    newLeft = Math.max(0, Math.min(newLeft, workArea.clientWidth - box.offsetWidth));
+    newTop = Math.max(0, Math.min(newTop, workArea.clientHeight - box.offsetHeight));
+    box.style.left = newLeft + "px";
+    box.style.top = newTop + "px";
+  });
+}
+
+makeDraggable("style-box", ".style-close", "8%", "37%");
+makeDraggable("edit-box", ".edit-close", "15%", "50%");
+makeDraggable("Animation-box", ".Animation-close", "15%", "50%");
+
+
+
+
+
+
+
+document.querySelectorAll('.tab-component').forEach(component => {
+    const prefix = component.dataset.prefix;
+    const tabs = component.querySelectorAll('.tab');
+    const displays = component.querySelectorAll('.data-display');
+
+    tabs.forEach(tab => {
+        tab.addEventListener('click', () => {
+            const target = prefix + '-' + tab.dataset.target;
+
+            // Remove 'active' class from all tabs
+            tabs.forEach(t => t.classList.remove('active'));
+
+            // Add 'active' to the clicked one
+            tab.classList.add('active');
+
+            // Show the matching display, hide others
+            displays.forEach(display => {
+                display.style.display = (display.id === target) ? 'block' : 'none';
+            });
+        });
+    });
+});
+
+// Position dropdown logic (unchanged)
+const positionsDropdown = document.getElementById("positions");
+const leftContainer = document.getElementById("leftContainer");
+const topContainer = document.getElementById("topContainer");
+
+const showPositions = ["relative", "absolute", "fixed", "sticky"];
+
+positionsDropdown?.addEventListener("change", function () {
+    const selected = this.value;
+    const show = showPositions.includes(selected);
+    leftContainer.style.display = show ? "block" : "none";
+    topContainer.style.display = show ? "block" : "none";
+});
+
+
+function regenerateAndRefresh() {
+    const iframe = document.getElementById("preview-iframe");
+
+    if (iframe && iframe.contentWindow && iframe.contentWindow.refreshPreview) {
+        iframe.contentWindow.refreshPreview();
+    }
+}
+
+function loadStyles(divname) {
+    fetch(`/api/get-styles/?divname=${divname}`)
+        .then(response => response.json())
+        .then(data => {
+            const tbody = document.getElementById("styles-tbody");
+            tbody.innerHTML = "";
+
+            if (data.error) {
+                alert(data.error);
+                return;
+            }
+
+            data.forEach(style => {
+                const row = document.createElement("tr");
+                row.style.cssText =
+                    "border-bottom:1px solid #383838;background-color:rgb(59,59,59);";
+
+                row.innerHTML = `
+                    <td style="padding-left:10px;">${style.lhs}</td>
+                    <td style="padding-left:10px;">${style.rhs}</td>
+                    
+                    <td><i class="bi bi-trash" style="cursor:pointer;padding-left:20px;"></i></td>
+                `;
+
+                row.querySelector(".bi-trash").addEventListener("click", () => {
+                    if (!confirm("Delete this style?")) return;
+
+                    fetch("/api/delete-style/", {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({
+                            divname: divname,
+                            lhs: style.lhs,
+                            rhs: style.rhs
+                        })
+                    })
+                    .then(res => res.json())
+                    .then(result => {
+                        if (!result.success) {
+                            alert(result.error || "Failed to delete style.");
+                            return;
+                        }
+                        loadStyles(divname);
+                        regenerateAndRefresh();
+                    });
+                });
+
+                tbody.appendChild(row);
+            });
+
+           
+            const inputRow = document.createElement("tr");
+            inputRow.innerHTML = `
+                <td><input type="text" id="new-lhs" placeholder="attribute" style="width:100%;padding:4px;"></td>
+                <td><input type="text" id="new-rhs" placeholder="value" style="width:100%;padding:4px;"></td>
+                <td colspan="2">
+                    <button id="apply-style-btn"
+                        style="padding:4px 10px;background:#3d91ff;border-radius:5px;color:white;border:none;">
+                        Apply
+                    </button>
+                </td>
+            `;
+            tbody.appendChild(inputRow);
+
+            document.getElementById("apply-style-btn").addEventListener("click", () => {
+                const lhs = document.getElementById("new-lhs").value.trim();
+                const rhs = document.getElementById("new-rhs").value.trim();
+
+                if (!lhs || !rhs) {
+                    alert("Both attribute and value are required.");
+                    return;
+                }
+
+                fetch("/api/add-style/", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ divname, lhs, rhs })
+                })
+                .then(res => res.json())
+                .then(result => {
+                    if (!result.success) {
+                        alert(result.error || "Failed to add style.");
+                        return;
+                    }
+                    loadStyles(divname);
+                    regenerateAndRefresh();
+                });
+            });
+        })
+        .catch(err => console.error("Error loading styles:", err));
+}
+
+
+
+
+
+function loadAnimationStyles(divname, type) {
+console.log("Triggered:", divname, type);
+    const endpoint = type === "active"
+        ? `/api/get-active-styles/?divname=${divname}`
+        : `/api/get-hover-styles/?divname=${divname}`;
+
+    fetch(endpoint)
+        .then(res => res.json())
+        .then(data => {
+
+            const tbody = document.getElementById("styles-tbody-anim");
+            tbody.innerHTML = "";
+
+            if (data.error) {
+                alert(data.error);
+                return;
+            }
+
+            // 🔹 Existing styles
+            data.forEach(style => {
+
+                const row = document.createElement("tr");
+                row.style.cssText =
+                    "border-bottom:1px solid #383838;background-color:rgb(59,59,59);";
+
+                row.innerHTML = `
+                    <td style="padding-left:10px;">${style.lhs}</td>
+                    <td style="padding-left:10px;">${style.rhs}</td>
+                    <td>
+                        <i class="bi bi-trash"
+                           style="cursor:pointer;padding-left:20px;"></i>
+                    </td>
+                `;
+
+                row.querySelector(".bi-trash").addEventListener("click", () => {
+
+                    if (!confirm("Delete this style?")) return;
+
+                    fetch("/api/delete-style/", {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({
+                            divname: divname,
+                            lhs: style.lhs,
+                            rhs: style.rhs
+                        })
+                    })
+                    .then(res => res.json())
+                    .then(result => {
+                        if (!result.success) {
+                            alert(result.error || "Failed to delete.");
+                            return;
+                        }
+
+                        loadAnimationStyles(divname, type);
+                        regenerateAndRefresh();
+                    });
+                });
+
+                tbody.appendChild(row);
+            });
+
+            // 🔹 Input row
+            const inputRow = document.createElement("tr");
+            inputRow.innerHTML = `
+                <td>
+                    <input type="text" id="anim-lhs"
+                        placeholder="attribute"
+                        style="width:100%;padding:4px;">
+                </td>
+                <td>
+                    <input type="text" id="anim-rhs"
+                        placeholder="value"
+                        style="width:100%;padding:4px;">
+                </td>
+                <td>
+                    <button id="apply-anim-btn"
+                        style="padding:4px 10px;background:#3d91ff;border-radius:5px;color:white;border:none;">
+                        Apply
+                    </button>
+                </td>
+            `;
+
+            tbody.appendChild(inputRow);
+
+            // 🔹 Apply button logic
+            document.getElementById("apply-anim-btn")
+                .addEventListener("click", () => {
+
+                const lhs = document.getElementById("anim-lhs").value.trim();
+                const rhs = document.getElementById("anim-rhs").value.trim();
+
+                if (!lhs || !rhs) {
+                    alert("Both attribute and value are required.");
+                    return;
+                }
+
+                fetch("/api/add-style/", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({
+                        divname: divname,
+                        lhs: lhs,
+                        rhs: rhs,
+                        animation: type   // 🔥 THIS is the key part
+                    })
+                })
+                .then(res => res.json())
+                .then(result => {
+
+                    if (!result.success) {
+                        alert(result.error || "Failed to add style.");
+                        return;
+                    }
+
+                    loadAnimationStyles(divname, type);
+                    regenerateAndRefresh();
+                });
+
+            });
+
+        })
+        .catch(err => console.error("Error loading animation styles:", err));
+}
+function selectDiv(divname) {
+
+    window.currentSelectedDiv = divname;
+
+    const selectedRadio = document.querySelector('input[name="animType"]:checked');
+    const type = selectedRadio ? selectedRadio.value : "hover";
+
+    loadAnimationStyles(window.currentSelectedDiv, type);
+
+}
+document.querySelectorAll('input[name="animType"]').forEach(radio => {
+
+    radio.addEventListener("change", function () {
+
+        if (!window.currentSelectedDiv) return;
+
+        loadAnimationStyles(
+            window.currentSelectedDiv,
+            this.value
+        );
+
+    });
+
+});
+    </script>
+    
+
+
+</html>

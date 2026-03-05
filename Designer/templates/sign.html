@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NCODE- Signup or Sign in</title>
+    <link rel = "stylesheet" href="{% static 'authorization/css/style.css'%}">
+</head>
+<style>
+    .truncate-js::after {
+        content: "...";
+    }
+      .custom-upload-btn {
+        background-color: #888888c5;
+        color: white;
+        padding: 10px 15px;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 14px;
+        font-weight: bold;
+        text-align: center;
+        display: inline-block;
+        border: none;
+        margin-left: 160px;
+    }
+
+    .custom-upload-btn:hover {
+        background-color: #3d3d3d;
+    }
+
+    /* Hide default file input */
+    #file-input {
+        display: none;
+    }
+    </style>
+<body>
+    <div style = "margin-top:10vh;">
+    <div class="cont">
+        <div class="form sign-in" style = "margin-top: 150px;">
+            <form action = "{% url 'loggingin' %}" method = "post" enctype="multipart/form-data">
+                {% csrf_token %}
+            <h2>Welcome</h2>
+            <label>
+                <span>Email</span>
+                <input type="email" name = "email-in" placeholder = "">
+            </label>
+            {% for message in messages %}
+            {% if "email!exist" in message.tags %}
+                <p style="color:red; font-size:small; margin-top:5px;text-align: center;">{{ message }}</p>
+            {% endif %}
+        {% endfor %}
+            <label>
+                <span>Password</span>
+                <input type="password" name = "password-in" />
+            </label>
+             {% for message in messages %}
+                        {% if "datamismatch" in message.tags %}
+                            <p style="color:red; font-size:small; margin-top:5px;text-align: center;">{{ message }}</p>
+                        {% endif %}
+                    {% endfor %}
+            <button type="submit" class="submit">Sign In</button>
+         </form>
+        </div>
+        <div class="sub-cont">
+            <div class="img">
+                <div class="img__text m--up">
+                 
+                    <h3>Don't have an account? Please Sign up!</h3>
+                </div>
+                <div class="img__text m--in">
+                
+                    <h3>If you already has an account, just sign in.</h3>
+                </div>
+                <div class="img__btn">
+                    <span class="m--up">Sign Up</span>
+                    <span class="m--in">Sign In</span>
+                </div>
+            </div>
+            <div class="form sign-up">
+                <form action="{% url 'signup' %}" enctype="multipart/form-data" method="post">
+                    {% csrf_token %}
+                    <h2>Create your Account</h2>
+                
+                    <!-- Name Field -->
+                    <label>
+                        <span>Name</span>
+                        <input type="text" name="name-up" />
+                        {% for message in messages %}
+                        {% if "email!exist" in message.tags %}
+                            <p style="color:red; font-size:small; margin-top:5px;text-align: center;">{{ message }}</p>
+                        {% endif %}
+                    {% endfor %}
+                    </label>
+                    <div>
+                        {% for message in messages %}
+                        {% if "passwordmismatch" in message.tags %}
+                            <p style="color:red; font-size:small; margin-top:5px;text-align: center;">{{ message }}</p>
+                        {% endif %}
+                    {% endfor %}
+                    </div>
+                    <!-- Email Field -->
+                    <label>
+                        <span>Email</span>
+                        <input type="email" name="email-up" />
+                    </label>
+                    {% for message in messages %}
+                        {% if "email" in message.tags %}
+                            <p style="color:red; font-size:small; margin-top:5px;text-align: center;">{{ message }}</p>
+                        {% endif %}
+                    {% endfor %}
+                
+                    <!-- Password Field -->
+                    <label>
+                        <span>Create Password</span>
+                        <input type="password" name="password-up" />
+                    </label>
+                    {% for message in messages %}
+                        {% if "password" in message.tags %}
+                            <p style="color:red; font-size:small; margin-top:5px;text-align: center;">{{ message }}</p>
+                        {% endif %}
+                    {% endfor %}
+                
+                    <!-- Re-type Password Field -->
+                    <label>
+                        <span>Re-type Password</span>
+                        <input type="password" name="repassword-up" />
+                    </label>
+                    {% for message in messages %}
+                        {% if "repassword" in message.tags %}
+                        <div>
+                            <p style="color:red; font-size:small; margin-top:5px;text-align: center;">{{ message }}</p>
+                        </div>
+                            {% endif %}
+                    {% endfor %}
+                    <label>
+                        <span>Designation (optional)</span>
+                        <input type="text" name="designation-up" />
+                    </label>
+                    
+                    <!-- <label for="file-input" id="upload-label" class="custom-upload-btn">
+                        Upload Image<br>
+                        <span>(optional)</span>
+                    </label>
+                    {% for message in messages %}
+                        {% if "pfpicture" in message.tags %}
+                        <div>
+                            <p style="color:red; font-size:small; margin-top:5px;text-align: center;">{{ message }}</p>
+                        </div>
+                            {% endif %}
+                    {% endfor %}
+                    
+                    Hidden File Input -->
+                  <!--    <input type="file" id="file-input" accept="image/*" onchange="updateButtonLabel()"> -->
+
+                    
+                    <button type="submit" class="submit">Sign Up</button>
+                </form>
+                
+            </div>
+        </div>
+    </div>
+</div>
+ <script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const urlParams = new URLSearchParams(window.location.search);
+        const skipTransition = urlParams.get("skip_transition");
+
+        const container = document.querySelector('.cont');
+        if (container) {
+            if (skipTransition === "true") {
+                container.classList.add('s--signup');
+            }
+
+            const btn = document.querySelector('.img__btn');
+            if (btn) {
+                btn.addEventListener('click', function() {
+                    container.classList.toggle('s--signup');
+                });
+            }
+        }
+    });
+    // function updateButtonLabel() {
+    //     var input = document.getElementById("file-input");
+    //     var label = document.getElementById("upload-label");
+
+    //     if (input.files.length > 0) {
+    //         label.textContent = input.files[0].name; // Change button label to file name
+    //     } else {
+    //         label.textContent = "Upload Image"; // Reset if no file selected
+    //     }
+    // }
+
+    document.querySelectorAll(".truncate-js").forEach(el => {
+        let length = el.getAttribute("data-length");
+        if (el.textContent.length > length) {
+            el.textContent = el.textContent.substring(0, length) + "...";
+        }
+    });
+</script>
+
+
+
+</body>
+</html>

@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Project Preview</title>
+    <style id="generated-style">
+        {{ project.cssstyle|safe }}
+    </style>
+</head>
+<body style="margin:0px;">
+    <div id="generated-html">
+        {{ project.htmlcode|safe }}
+    </div>
+
+    <script>
+   
+    function refreshPreview() {
+        fetch("/api/regenerate-code/")
+        .then(res => res.json())
+        .then(data => {
+            if (data.html && data.css) {
+                document.getElementById("generated-html").innerHTML = data.html;
+
+                const styleTag = document.getElementById("generated-style");
+                if (styleTag) {
+                    styleTag.textContent = data.css;
+                } else {
+                    const newStyle = document.createElement("style");
+                    newStyle.id = "generated-style";
+                    newStyle.textContent = data.css;
+                    document.head.appendChild(newStyle);
+                }
+            }
+        })
+        .catch(error => {
+            console.error("Error updating preview:", error);
+        });
+    }
+
+
+    {{ project.JScode|safe }}
+    </script>
+</body>
+</html>

@@ -1,0 +1,21 @@
+{% extends 'filemanage.html' %}
+{% block settings %}class="active"{% endblock %}
+
+{% block profile %}{% endblock %}
+{% block drive %}{% endblock %}
+{% block content %}
+ <div class="content-header-wrapper">
+     <h2 class="title">Settings</h2>
+
+ </div>
+<div class="drive-wrapper drive-grid-view">
+                        <div class="grid-items-wrapper">
+
+
+                            <a href = "{% url 'loggingout'%}"><button class="logout-btn" >Logout</button></a>
+                            <a href = "{% url 'deleteaccount'%}"><button class="close-btn">Delete Account</button></a>
+
+
+                        </div>
+                    </div>
+{% endblock %}
